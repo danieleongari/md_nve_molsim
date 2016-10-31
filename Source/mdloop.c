@@ -13,7 +13,7 @@ void Mdloop(void)
 
   FilePtr=fopen("movie.pdb","w");
  
-  for(i=0;i<6;i++)
+  for(i=0;i<6;i++) 
     Av[i] = 0.0;
 
   dUtot = 0.0;
@@ -53,17 +53,18 @@ void Mdloop(void)
     // Start Modification
     // Choose a starting point to calculate the energy drift
     // Use Utot0
-
+    if (i==NumberOfInitializationSteps)
+      Utot0=UTotal;
 
     // End Modification
 
     Tempz=2.0*UKinetic/(3.0*NumberOfParticles-3.0);
 
     if(i>=NumberOfInitializationSteps&&((i%50)==0))
-      printf("Step: %d UTotal: %lf UKinetic: %lf UPotential: %lf Temperature: %lf Pressure: %lf\n",
-      i,UTotal,UKinetic,UPotential,Tempz,Pressure);
+      printf("Step: %d UTotal: %lf UKinetic: %lf UPotential: %lf Temperature: %lf Pressure: %lf\n",i,UTotal,UKinetic,UPotential,Tempz,Pressure);
   
-    if(i%10==0) WritePdb(FilePtr);
+    if(i%10==0)                                                
+      WritePdb(FilePtr);
 
     if(i==NumberOfSteps-1)
     {
@@ -89,21 +90,23 @@ void Mdloop(void)
     //  Start Modification
     //  update the energy drift
     //  (Use dUtot.)
-
-
+      dUtot+=(Utot0-UTotal)/Utot0;
     //  End Modification
 
     }
 
     // sample radial distribution function
 
-    if((i%100)==0) SampleRDF(SAMPLE);
+    if((i%100)==0) 
+      SampleRDF(SAMPLE);
+
     SampleDiff(SAMPLE);
-  }
+
+  }//--------------------------------------------------End of Step
  
   // print averages to screen
  
-  if(Av[5]>0.5)
+  if(Av[5]>0.5)        //Av[5] is a counter of Non-Initialization Steps
   {
     Av[5]=1.0/Av[5];
     for(i=0;i<5;i++)

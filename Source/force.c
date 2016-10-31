@@ -44,8 +44,8 @@ void Force(void)
         r6i=CUBE(r2i);
  
         UPotential+=4.0*r6i*(r6i-1.0)-Ecut;
-        Ff=48.0*r2i*(r6i-0.5);
-        Pressure+=Ff;
+        Ff=48.0*r6i*(r6i-0.5);
+        Pressure+=Ff;           //P= dens*kb*T + 1/(3*V) * SUM_i SUM_j Ff
         Ff=Ff*r2i;
  
         Forces[i].x+=Ff*dr.x;

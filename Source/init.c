@@ -40,7 +40,7 @@ void Init(void)
  
   for(i=0;i<NumberOfParticles;i++)
   {
-    Velocities[i].x-=Momentum.x;
+    Velocities[i].x-=Momentum.x; //Fix the center of mass
     Velocities[i].y-=Momentum.y;
     Velocities[i].z-=Momentum.z;
  

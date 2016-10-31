@@ -24,7 +24,7 @@ void Integrate(double Step,VECTOR *Momentum)
     Velocities[i].y=(NewPositions[i].y-OldPositions[i].y)/(2.0*Deltat);
     Velocities[i].z=(NewPositions[i].z-OldPositions[i].z)/(2.0*Deltat);
  
-    UKinetic+=0.5*(SQR(Velocities[i].x)+SQR(Velocities[i].y)+SQR(Velocities[i].z));
+    UKinetic+=0.5*(SQR(Velocities[i].x)+SQR(Velocities[i].y)+SQR(Velocities[i].z)); //** for Initialization
   }
  
   // for NumberOfSteps < NumberOfInitializationSteps; use the velocity 
@@ -33,7 +33,7 @@ void Integrate(double Step,VECTOR *Momentum)
   // recalculated !!!!
 
   if(Step<NumberOfInitializationSteps)
-    Scale=sqrt(Temperature*(3.0*NumberOfParticles-3.0)/(2.0*UKinetic));
+    Scale=sqrt(Temperature*(3.0*NumberOfParticles-3.0)/(2.0*UKinetic));            //** for initialization
   else
     Scale=1.0;
  
@@ -50,20 +50,20 @@ void Integrate(double Step,VECTOR *Momentum)
     Velocities[i].y*=Scale;
     Velocities[i].z*=Scale;
  
-    (*Momentum).x+=Velocities[i].x;
+    (*Momentum).x+=Velocities[i].x; //Total momentum of the cell
     (*Momentum).y+=Velocities[i].y;
     (*Momentum).z+=Velocities[i].z;
  
-    NewPositions[i].x=OldPositions[i].x+Velocities[i].x*Deltat;
-    NewPositions[i].y=OldPositions[i].y+Velocities[i].y*Deltat;
-    NewPositions[i].z=OldPositions[i].z+Velocities[i].z*Deltat;
+    NewPositions[i].x=OldPositions[i].x+Velocities[i].x*2*Deltat;
+    NewPositions[i].y=OldPositions[i].y+Velocities[i].y*2*Deltat;
+    NewPositions[i].z=OldPositions[i].z+Velocities[i].z*2*Deltat;
 
-    PositionsNONPDB[i].x+=NewPositions[i].x-Positions[i].x;
+    PositionsNONPDB[i].x+=NewPositions[i].x-Positions[i].x; //PositionsNONPDB=NewPosition but we will not apply PBC 
     PositionsNONPDB[i].y+=NewPositions[i].y-Positions[i].y;
     PositionsNONPDB[i].z+=NewPositions[i].z-Positions[i].z;
  
-    UKinetic+=0.5*(SQR(Velocities[i].x)+SQR(Velocities[i].y)+SQR(Velocities[i].z));
- 
+    UKinetic+=0.5*(SQR(Velocities[i].x)+SQR(Velocities[i].y)+SQR(Velocities[i].z));   //*** for after Inizialization
+  
     OldPositions[i].x=Positions[i].x;
     OldPositions[i].y=Positions[i].y;
     OldPositions[i].z=Positions[i].z;
@@ -73,7 +73,7 @@ void Integrate(double Step,VECTOR *Momentum)
     Positions[i].z=NewPositions[i].z;
 
     // put particles back in the box
-    // the previous position has the same transformation (Why ?)
+    // the previous position has the same transformation (Why? Because I can easily compute the distance)
     if(Positions[i].x>=Box)
     {
       Positions[i].x-=Box;
@@ -109,5 +109,5 @@ void Integrate(double Step,VECTOR *Momentum)
   }
  
   // add the kinetic part of the pressure
-  Pressure+=2.0*UKinetic*NumberOfParticles/(CUBE(Box)*(3.0*NumberOfParticles));
+  Pressure+=2.0*UKinetic*NumberOfParticles/(CUBE(Box)*(3.0*NumberOfParticles-3)); //Thi final -3 is due to fix COM: there are (3*N-3) dof
 }

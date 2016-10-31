@@ -24,7 +24,7 @@ void SampleRDF(int Ichoise)
       Delta=Box/(2.0*Maxx);
       break;
     case SAMPLE:
-      Ggt+=1.0;
+      Ggt++;
       // loop over all pairs
       for(i=0;i<NumberOfParticles-1;i++)
       {

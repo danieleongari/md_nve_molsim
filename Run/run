@@ -10,9 +10,9 @@
 set BOX    = 5.0
 set NPART  = 100
 set NSTEP  = 50000
-set NINIT  = 5000
 set TEMP   = 0.5
 set DELTAT = 0.005
+set NINIT  = 5000
 
 cat > input <<endofdata
 $BOX    $NPART $NSTEP  $TEMP  $DELTAT $NINIT
